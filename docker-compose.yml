@@ -1,0 +1,55 @@
+version: "3"
+
+services:
+  has:
+    build: 
+      context: ./services/has
+      args:
+        - phptag=${PHP_TAG}
+        - apphome=${APP_HOME}
+        - appotfdeploy=${APP_OTF_DEPLOY}
+        - appport=${APP_PORT}
+        - appuname=${APP_UNAME}
+        - appgname=${APP_GNAME}
+        - appuid=${APP_UID}
+        - appgid=${APP_GID}
+    container_name: 'hasc'
+    restart: 'no'
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    expose:
+      - "${APP_PORT}"
+    volumes:
+      - ${APP_LOCAL_DIR}:${APP_HOME}/otf
+    environment:
+      - APP_ENVIRONMENT
+      - MYSQL_PORT
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_HOST
+    env_file:
+      - ${SEC_SRC_DIR}/.${APP_ENVIRONMENT}/.asc.env
+      - ${SEC_SRC_DIR}/.${APP_ENVIRONMENT}/.csc.env
+    links:
+      - hds
+
+  hds:
+    image: mariadb:${MDB_TAG}
+    container_name: 'hdsc'
+    restart: 'no'
+    ports:
+      - "${MYSQL_PORT}:${MYSQL_PORT}"
+    expose:
+      - "${MYSQL_PORT}"
+    volumes: 
+      - hdsv:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE
+      - MYSQL_USER
+    env_file:
+      - ${SEC_SRC_DIR}/.${APP_ENVIRONMENT}/.dsc.env
+      - ${SEC_SRC_DIR}/.${APP_ENVIRONMENT}/.csc.env
+
+volumes:
+  hdsv:
+
