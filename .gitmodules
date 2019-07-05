@@ -1,0 +1,3 @@
+[submodule "services/has/happs"]
+	path = services/has/happs
+	url = https://bitbucket.org/kryptonmlt/happs.git
