@@ -14,7 +14,7 @@ ENV APP_OTF_DEPLOY_OPT=$appotfdeploy
 
 ENV APP_HOME_DIR=$apphome
 
-# Determins the working directory to use depending on whether
+# Determines the working directory to use depending on whether
 # we want on the fly changes to be enabled or not
 ENV APP_WORK_DIR=${appotfdeploy:+$apphome/otf}
 ENV APP_WORK_DIR=${APP_WORK_DIR:-$apphome/release}
