@@ -22,9 +22,9 @@ echo
 #       - the on the fly directory is empty
 #       - the release directory is populated ( with the packaged application )
 # then the on the fly directory can be automatically initially populated with cloned contents from the release directory to avoid having to do this manually on the local docker host
-if [[ ( ${APP_ENVIRONMENT} == "local" ) && ( -n "${APP_OTF_DEPLOY_OPT}" ) && ( $(pwd) == "${APP_HOME_DIR}/otf" ) && ( -z "$(ls ${APP_HOME_DIR}/otf)" ) && ( -n "$(ls ${APP_HOME_DIR}/release)" ) ]]
+if [[ ( -n $(echo ${APP_ENVIRONMENT} | grep "local") ) && ( -n "${APP_OTF_DEPLOY_OPT}" ) && ( $(pwd) == "${APP_HOME_DIR}/otf" ) && ( -z "$(ls ${APP_HOME_DIR}/otf)" ) && ( -n "$(ls ${APP_HOME_DIR}/release)" ) ]]
 then
-	rsync -av --stats ${APP_HOME_DIR}/release/ ${APP_HOME_DIR}/otf/
+	rsync -a --stats ${APP_HOME_DIR}/release/ ${APP_HOME_DIR}/otf/
 fi
 
 if [[ -f .env ]]

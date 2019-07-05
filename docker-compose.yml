@@ -28,8 +28,8 @@ services:
       - MYSQL_USER
       - MYSQL_HOST
     env_file:
-      - ${SEC_SRC_DIR}/.${APP_ENVIRONMENT}/.asc.env
-      - ${SEC_SRC_DIR}/.${APP_ENVIRONMENT}/.csc.env
+      - ${SEC_DIR}/.asc.env
+      - ${SEC_DIR}/.csc.env
     links:
       - hds
 
@@ -47,8 +47,8 @@ services:
       - MYSQL_DATABASE
       - MYSQL_USER
     env_file:
-      - ${SEC_SRC_DIR}/.${APP_ENVIRONMENT}/.dsc.env
-      - ${SEC_SRC_DIR}/.${APP_ENVIRONMENT}/.csc.env
+      - ${SEC_DIR}/.dsc.env
+      - ${SEC_DIR}/.csc.env
 
 volumes:
   hdsv:
