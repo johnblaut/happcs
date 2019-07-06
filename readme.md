@@ -1,11 +1,13 @@
 ## Introduction
 
-The aim of the **HappsC** project is to provide a convenient and readily available setup for running Happs using Docker containers, that can facilitate quick deployment of code changes during testing and development, whilst still being suitable for use in production, thus ensuring consistency across all environments. Happs is based on Laravel which is a web application framework that attempts to take the pain out of development by easing common tasks used in most web projects. The application consists of two service components:
+The aim of the **HappsC** project is to provide a convenient and readily available setup for running Happs using Docker containers, that can facilitate quick deployment of code changes during testing and development, whilst still being suitable for use in production, thus ensuring consistency across all environments. Happs is based on Laravel which is a web application framework that attempts to take the pain out of development by easing common tasks used in most web projects.
+
+## Overview
+
+On Docker, the application is set up to consist of two service components:
 
 - `has` Happs application service running on container `hasc` which includes PHP and Composer for running Laravel
 - `hdc` Happs database service running on container `hdsc` using MariaDB
-
-## Overview
 
 Configuration for each environment is maintained in this repository using a file named: `.env` found in directory `env/<environment>/` (e.g. `env/local.jb/` for my own local environment, `env/production/` for production, etc.). Therefore for any new environment one should create a similar `env/<environment>` directory named accordingly, containing an `.env` file and commit it to the repository.  For a specific environment's `.env` file you may use the contents of an existing `.env` file from  another environment as a template and then update the values accordingly. The name of the environment happens to also be used throughout the application to determine other settings and conditions accordingly. This is done via variable `$APP_ENVIRONMENT` stored in tne `.env` file of the given environment and its value should therefore be identical to `<environment>` i.e. consistent with the name of the directory under `env/` storing the configuration for that given environment.
 
