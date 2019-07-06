@@ -1,8 +1,6 @@
 ## Introduction
 
-The aim of the HappsC project is to provide a convenient and readily available setup for running Happs using Docker containers.
-Happs is based on Laravel which is a web application framework that attempts to take the pain out of development by easing common tasks used in most web projects.
-The application consists of two service components:
+The aim of the **HappsC** project is to provide a convenient and readily available setup for running [Happs](https://bitbucket.org/kryptonmlt/happs/src) using Docker containers, in order to facilitate quick deployment of code changes during testing and development, whilst still being suitable for use in production, thus ensuring consistency across all environments. Happs is based on Laravel which is a web application framework that attempts to take the pain out of development by easing common tasks used in most web projects. The application consists of two service components:
 
 - **has**: Happs application service running on container: **hasc** which includes PHP and Composer for running Laravel
 - **hdc**: Happs database service running on container: **hdsc** using MariaDB
