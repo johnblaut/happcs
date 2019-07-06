@@ -14,14 +14,14 @@ mkdir $LOCAL_$HAPPSC_REPO_DIR
 cd $LOCAL_$HAPPSC_REPO_DIR
 git clone --recursive https://github.com/johnblaut/happsc.git
 mv $APP_ENVIRONMENT.env .env
-cp secrets/sample/.asc.env secrets/sample/.csc.env secrets/sample/.dsc.env $SEC_DIR
+cp secrets/sample/.asc.env secrets/sample/.csc.env secrets/sample/.dsc.env $SEC_DIR/
 vim $SEC_DIR/.asc.env
 vim $SEC_DIR/.csc.env
 vim $SEC_DIR/.dsc.env
 docker-compose up
 ```
 
-## Setup Guide
+## Configuration Reference
 
 TBD
 
