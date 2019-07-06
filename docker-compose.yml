@@ -14,13 +14,11 @@ services:
         - appuid=${APP_UID}
         - appgid=${APP_GID}
     container_name: 'hasc'
-    restart: 'no'
+    restart: '$APP_RESTART'
     ports:
       - "${APP_PORT}:${APP_PORT}"
     expose:
       - "${APP_PORT}"
-    volumes:
-      - ${APP_LOCAL_DIR}:${APP_HOME}/otf
     environment:
       - APP_ENVIRONMENT
       - MYSQL_PORT
@@ -36,7 +34,7 @@ services:
   hds:
     image: mariadb:${MDB_TAG}
     container_name: 'hdsc'
-    restart: 'no'
+    restart: '$MYSQL_RESTART'
     ports:
       - "${MYSQL_PORT}:${MYSQL_PORT}"
     expose:

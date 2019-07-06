@@ -67,7 +67,7 @@ then
 	# clear variables that are now no longer required
         unset APP_ENVIRONMENT APP_OTF_DEPLOY_OPT APP_HOME_DIR APPKEY MYSQL_HOST MYSQL_PORT MYSQL_DATABASE MYSQL_USER MYSQL_PASSWORD REDISPW MAILPW PUSHKEY PUSHSEC
 
-	php artisan serve --host=0.0.0.0 --port=${APPPORT}
+	exec php artisan serve --host=0.0.0.0 --port=${APPPORT}
 else
 	echo -e "\nQuitting due to missing .env file! Please ensure this file is present to be able to launch the application.\n"
 fi

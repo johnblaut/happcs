@@ -39,8 +39,8 @@ RUN mkdir -m 700 $apphome && \
     passwd -l $appuname
 
 # populate container with application code and configuration in /release
-COPY happs        $apphome/release
-COPY conf/app.env $apphome/release/.env
+COPY happs     $apphome/release
+COPY conf/.env $apphome/release/.env
 
 RUN chmod 700 $apphome/release && \
     chmod 600 $apphome/release/.env && \
