@@ -1,13 +1,11 @@
 #!/bin/bash
 
-echo
-echo "Environment:        ${APP_ENVIRONMENT}"
+echo -e "\nEnvironment:        ${APP_ENVIRONMENT}"
 
 [[ -n ${APP_OTF_DEPLOY_OPT} ]] && APP_OTF_UPDATES="enabled" || APP_OTF_UPDATES="disabled"
 echo "On the fly updates: ${APP_OTF_UPDATES}"
 
-echo "Working directory:  $(pwd)"
-echo
+echo -e "Working directory:  $(pwd)\n"
 
 # only if the following are all satisfied:
 #       - environment is a local one
@@ -18,19 +16,15 @@ echo
 # then the on the fly directory can be automatically initially populated with cloned contents from the release directory to avoid having to do this manually on the local docker host
 if [[ ( -n $(echo ${APP_ENVIRONMENT} | grep "local") ) && ( -n "${APP_OTF_DEPLOY_OPT}" ) && ( $(pwd) == "${APP_HOME_DIR}/otf" ) && ( -z "$(ls -A ${APP_HOME_DIR}/otf)" ) && ( -n "$(ls -A ${APP_HOME_DIR}/release)" ) ]]
 then
-	echo "Current working directory is also empty - hence safe to automatically copy application in here so that it is readily available for on the fly updates ..."
-	echo
+	echo "Current working directory is also empty - hence safe to automatically copy application in here so that it is readily available for on the fly updates ...\n"
 
 	rsync -a --stats ${APP_HOME_DIR}/release/ ${APP_HOME_DIR}/otf/
 fi
 
-echo
 echo "File listing:"
-echo "-------------"
+echo "-------------\n"
 
 ls -Al
-
-echo
 
 if [[ -f .env ]]
 then
@@ -67,7 +61,7 @@ then
 	then
 		php artisan migrate --seed
 	else
-		echo "Skipping table creation and seeding as DB has already been populated ..."
+		echo -e "\nSkipping table creation and seeding as DB has already been populated ...\n"
 	fi
 
 	# clear variables that are now no longer required
