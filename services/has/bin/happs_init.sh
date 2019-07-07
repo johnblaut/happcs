@@ -1,10 +1,8 @@
 #!/bin/bash
 
-echo
+echo -e "\n$(lsb_release -a)\n$(uname -a)\n$(php -v)\n"
 
-php -v
-
-echo -e "\nApplication:        Happs"
+echo "Application:        Happs"
 echo "Version:            ${APP_VERSION}"
 echo "Environment:        ${APP_ENVIRONMENT}"
 
