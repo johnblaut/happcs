@@ -43,7 +43,7 @@ then
 	
 	DBCHECK=2
 
-	echo "Wating for DB at $MYSQL_HOST:$MYSQL_PORT to come up ..."
+	echo -e "Wating for DB at $MYSQL_HOST:$MYSQL_PORT to come up ...\n"
 
 	while [ $DBCHECK -ne 0 ]
 	do
@@ -54,14 +54,12 @@ then
 		DBCHECK=$?
 	done
 
-	echo
-
 	# if the DB is empty and no tables are found then proceed to set up the tables and add data
 	if [[ -z "$(mysql -N -B -h ${MYSQL_HOST} -u ${MYSQL_USER} -p${MYSQL_PASSWORD} -e 'show tables' ${MYSQL_DATABASE})" ]] 
 	then
 		php artisan migrate --seed
 	else
-		echo -e "\nSkipping table creation and seeding as DB has already been populated ...\n"
+		echo -e "Skipping table creation and seeding as DB has already been populated ...\n"
 	fi
 
 	# clear variables that are now no longer required
