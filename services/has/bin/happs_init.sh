@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -e "\n$(lsb_release -a)\n$(uname -a)\n$(php -v)\n"
+echo -e "\n$(cat /etc/lsb-release)\n$(uname -a)\n$(php -v)\n"
 
 echo "Application:        Happs"
 echo "Version:            ${APP_VERSION}"
