@@ -6,13 +6,7 @@ echo "Environment:        ${APP_ENVIRONMENT}"
 [[ -n ${APP_OTF_DEPLOY_OPT} ]] && APP_OTF_UPDATES="enabled" || APP_OTF_UPDATES="disabled"
 echo "On the fly updates: ${APP_OTF_UPDATES}"
 
-echo "Working direcotry:  $(pwd)"
-echo
-echo "File listing:"
-echo "-------------"
-
-ls -Al
-
+echo "Working directory:  $(pwd)"
 echo
 
 # only if the following are all satisfied:
@@ -24,8 +18,19 @@ echo
 # then the on the fly directory can be automatically initially populated with cloned contents from the release directory to avoid having to do this manually on the local docker host
 if [[ ( -n $(echo ${APP_ENVIRONMENT} | grep "local") ) && ( -n "${APP_OTF_DEPLOY_OPT}" ) && ( $(pwd) == "${APP_HOME_DIR}/otf" ) && ( -z "$(ls -A ${APP_HOME_DIR}/otf)" ) && ( -n "$(ls -A ${APP_HOME_DIR}/release)" ) ]]
 then
+	echo "Current directory is ${APP_HOME_DIR}/otf/ and empty - copying application in here so that it is readily available for on the fly updates ..."
+	echo
+
 	rsync -a --stats ${APP_HOME_DIR}/release/ ${APP_HOME_DIR}/otf/
 fi
+
+echo
+echo "File listing:"
+echo "-------------"
+
+ls -Al
+
+echo
 
 if [[ -f .env ]]
 then
