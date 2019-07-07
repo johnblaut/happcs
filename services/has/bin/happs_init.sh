@@ -49,8 +49,6 @@ then
 	do
 		sleep 5
 
-		echo -n ".."
-
 		echo | nc -w 2 $MYSQL_HOST $MYSQL_PORT > /dev/null 2>&1
 		
 		DBCHECK=$?
