@@ -1,6 +1,12 @@
 #!/bin/bash
 
-echo -e "\nEnvironment:        ${APP_ENVIRONMENT}"
+echo
+
+php -v
+
+echo -e "\nApplication:        Happs"
+echo "Version:            ${APP_VERSION}"
+echo "Environment:        ${APP_ENVIRONMENT}"
 
 [[ -n ${APP_OTF_DEPLOY_OPT} ]] && APP_OTF_UPDATES="enabled" || APP_OTF_UPDATES="disabled"
 echo "On the fly updates: ${APP_OTF_UPDATES}"
@@ -63,7 +69,7 @@ then
 	fi
 
 	# clear variables that are now no longer required
-        unset APP_ENVIRONMENT APP_OTF_DEPLOY_OPT APP_HOME_DIR APP_WORK_DIR APPKEY MYSQL_HOST MYSQL_PORT MYSQL_DATABASE MYSQL_USER MYSQL_PASSWORD REDISPW MAILPW PUSHKEY PUSHSEC
+        unset APP_ENVIRONMENT APP_VERSION APP_OTF_DEPLOY_OPT APP_HOME_DIR APP_WORK_DIR APPKEY MYSQL_HOST MYSQL_PORT MYSQL_DATABASE MYSQL_USER MYSQL_PASSWORD REDISPW MAILPW PUSHKEY PUSHSEC
 
 	# Launch the application ( 'php artisan serve' is the value of $@ passed by the CMD statement in Dockerfile )
 	exec $@ --host=0.0.0.0 --port=${APPPORT}

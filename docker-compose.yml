@@ -22,6 +22,7 @@ services:
       - "${APP_PORT}"
     environment:
       - APP_ENVIRONMENT
+      - APP_VERSION
       - MYSQL_PORT
       - MYSQL_DATABASE
       - MYSQL_USER
