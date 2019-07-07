@@ -1,3 +1,4 @@
-**/.git*
-.env.example
-.env
+**/.git
+**/.gitignore
+**/.gitattributes
+**/.env.example

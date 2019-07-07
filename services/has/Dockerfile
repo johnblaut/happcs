@@ -31,11 +31,9 @@ RUN apt-get -y update --fix-missing && \
     docker-php-ext-install mcrypt pdo_mysql zip && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# create directory layout and application running user with a locked pw
-RUN mkdir -m 700 $apphome && \
-    mkdir -m 700 $apphome/otf && \
-    groupadd -g $appgid $appgname && \
-    useradd -u $appuid -g $appgname -d $apphome -M $appuname && \
+# create application running user with a locked pw
+RUN groupadd -g $appgid $appgname && \
+    useradd -u $appuid -g $appgname -d $apphome -m $appuname && \
     passwd -l $appuname
 
 # populate container with application code and configuration in /release
@@ -64,13 +62,18 @@ USER root
 COPY bin $apphome/bin
 
 RUN chmod 700 $apphome/bin $apphome/bin/*.sh && \
+    mkdir -m 700 /apphome/otf
+    ln -s $APP_WORK_DIR $apphome/deploy
     chown -R ${appuname}. $apphome
 
 # switch back permanently to the intended running user for launching the application
 USER $appuname
 
-WORKDIR $APP_WORK_DIR
+WORKDIR $APP_HOME_DIR/deploy
+
+ENTRYPOINT ["happs_init.sh"]
 
 EXPOSE $APPPORT
 
-ENTRYPOINT exec ${APP_HOME_DIR}/bin/happs_init.sh
+CMD ["php artisan serve"]
+
