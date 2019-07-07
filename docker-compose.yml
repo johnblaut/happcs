@@ -2,6 +2,7 @@ version: "3"
 
 services:
   has:
+    image: happs:${APP_ENVIRONMENT}
     build: 
       context: ./services/has
       args:
