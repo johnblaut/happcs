@@ -18,7 +18,7 @@ echo
 # then the on the fly directory can be automatically initially populated with cloned contents from the release directory to avoid having to do this manually on the local docker host
 if [[ ( -n $(echo ${APP_ENVIRONMENT} | grep "local") ) && ( -n "${APP_OTF_DEPLOY_OPT}" ) && ( $(pwd) == "${APP_HOME_DIR}/otf" ) && ( -z "$(ls -A ${APP_HOME_DIR}/otf)" ) && ( -n "$(ls -A ${APP_HOME_DIR}/release)" ) ]]
 then
-	echo "Current directory is ${APP_HOME_DIR}/otf/ and empty - copying application in here so that it is readily available for on the fly updates ..."
+	echo "Current working directory is also empty - hence safe to automatically copy application in here so that it is readily available for on the fly updates ..."
 	echo
 
 	rsync -a --stats ${APP_HOME_DIR}/release/ ${APP_HOME_DIR}/otf/
