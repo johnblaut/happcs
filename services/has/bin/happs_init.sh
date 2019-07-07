@@ -59,7 +59,7 @@ then
 	then
 		php artisan migrate --seed
 	else
-		echo -e "Skipping table creation and seeding as DB has already been populated ...\n"
+		echo -e "\nSkipping table creation and seeding as DB has already been populated ...\n"
 	fi
 
 	# clear variables that are now no longer required
