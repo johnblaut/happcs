@@ -22,9 +22,11 @@ then
 fi
 
 echo "File listing:"
-echo "-------------\n"
+echo "-------------"
 
 ls -Al
+
+echo
 
 if [[ -f .env ]]
 then
