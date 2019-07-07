@@ -1,8 +1,14 @@
 #!/bin/bash
 
-echo -e "\n$(uname -a)\n$(cat /etc/os-release)\n$(php -v)\n"
+echo
 
-echo "Application:        Happs"
+cat /etc/os-release | grep PRETTY_NAME | sed 's/.*=//g;s/\"//g'
+
+echo
+
+php -v
+
+echo -e "\nApplication:        Happs"
 echo "Version:            ${APP_VERSION}"
 echo "Environment:        ${APP_ENVIRONMENT}"
 
