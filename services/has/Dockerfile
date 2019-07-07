@@ -24,7 +24,7 @@ ENV APP_WORK_DIR=${APP_WORK_DIR:-$apphome/release}
 # Update pacakges, installed needed packages, clear packages cache files, install needed php extensions and composer
 RUN apt-get -y update --fix-missing && \
     apt-get upgrade -y && \
-    apt-get -y install curl libcurl3 libcurl3-dev rsync zip unzip netcat libmcrypt-dev mysql-client zlib1g-dev && \
+    apt-get -y install curl libcurl3 libcurl3-dev procps rsync zip unzip netcat libmcrypt-dev mysql-client zlib1g-dev && \
     apt-get clean autoclean && \
     apt-get autoremove --yes && \
     rm -rf /var/lib/apt/lists/* && \
@@ -32,8 +32,9 @@ RUN apt-get -y update --fix-missing && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # create application running user with a locked pw
-RUN groupadd -g $appgid $appgname && \
-    useradd -u $appuid -g $appgname -d $apphome -m $appuname && \
+RUN mkdir -m 700 $apphome && \
+    groupadd -g $appgid $appgname && \
+    useradd -u $appuid -g $appgname -d $apphome -M $appuname && \
     passwd -l $appuname
 
 # populate container with application code and configuration in /release
@@ -42,7 +43,7 @@ COPY conf/.env $apphome/release/.env
 
 RUN chmod 700 $apphome/release && \
     chmod 600 $apphome/release/.env && \
-    chown -R ${appuname}. $apphome/release
+    chown -R ${appuname}. $apphome
 
 WORKDIR $APP_HOME_DIR/release
 
@@ -61,17 +62,17 @@ USER root
 
 COPY bin $apphome/bin
 
-RUN chmod 700 $apphome/bin $apphome/bin/*.sh && \
-    mkdir -m 700 /apphome/otf
-    ln -s $APP_WORK_DIR $apphome/deploy
-    chown -R ${appuname}. $apphome
+RUN chmod 700 $apphome/.composer $apphome/bin $apphome/bin/*.sh && \
+    mkdir -m 700 $apphome/otf && \
+    ln -s $APP_WORK_DIR $apphome/deploy && \
+    chown -R ${appuname}. $apphome/bin $apphome/otf $apphome/deploy
 
 # switch back permanently to the intended running user for launching the application
 USER $appuname
 
 WORKDIR $APP_HOME_DIR/deploy
 
-ENTRYPOINT ["happs_init.sh"]
+ENTRYPOINT ["../bin/happs_init.sh"]
 
 EXPOSE $APPPORT
 

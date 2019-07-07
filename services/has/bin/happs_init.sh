@@ -6,7 +6,7 @@ echo "Environment:        ${APP_ENVIRONMENT}"
 [[ -n ${APP_OTF_DEPLOY_OPT} ]] && APP_OTF_UPDATES="enabled" || APP_OTF_UPDATES="disabled"
 echo "On the fly updates: ${APP_OTF_UPDATES}"
 
-echo "Working direcotry:  $(pwd) -> $(pwd -P)"
+echo "Working direcotry:  $(pwd)"
 echo
 echo "File listing:"
 echo "-------------"
@@ -22,7 +22,7 @@ echo
 #       - the on the fly directory is empty
 #       - the release directory is populated ( with the packaged application )
 # then the on the fly directory can be automatically initially populated with cloned contents from the release directory to avoid having to do this manually on the local docker host
-if [[ ( -n $(echo ${APP_ENVIRONMENT} | grep "local") ) && ( -n "${APP_OTF_DEPLOY_OPT}" ) && ( $(pwd -P) == "${APP_HOME_DIR}/otf" ) && ( -z "$(ls -A ${APP_HOME_DIR}/otf)" ) && ( -n "$(ls -A ${APP_HOME_DIR}/release)" ) ]]
+if [[ ( -n $(echo ${APP_ENVIRONMENT} | grep "local") ) && ( -n "${APP_OTF_DEPLOY_OPT}" ) && ( $(pwd) == "${APP_HOME_DIR}/otf" ) && ( -z "$(ls -A ${APP_HOME_DIR}/otf)" ) && ( -n "$(ls -A ${APP_HOME_DIR}/release)" ) ]]
 then
 	rsync -a --stats ${APP_HOME_DIR}/release/ ${APP_HOME_DIR}/otf/
 fi
@@ -69,7 +69,7 @@ then
         unset APP_ENVIRONMENT APP_OTF_DEPLOY_OPT APP_HOME_DIR APP_WORK_DIR APPKEY MYSQL_HOST MYSQL_PORT MYSQL_DATABASE MYSQL_USER MYSQL_PASSWORD REDISPW MAILPW PUSHKEY PUSHSEC
 
 	# Launch the application ( 'php artisan serve' is the value of $@ passed by the CMD statement in Dockerfile )
-	exec "$@ --host=0.0.0.0 --port=${APPPORT}"
+	exec $@ --host=0.0.0.0 --port=${APPPORT}
 else
 	echo -e "\nQuitting due to missing .env file! Please ensure this file is present to be able to launch the application.\n"
 fi
