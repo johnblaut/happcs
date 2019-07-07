@@ -1,0 +1,7 @@
+version: "3"
+
+services:
+  has:
+    volumes:
+      - ${APP_LOCAL_DIR}:${APP_HOME}/otf
+
