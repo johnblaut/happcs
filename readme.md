@@ -31,7 +31,7 @@ On your machine, enter the parent directory where you intend to download this Gi
 git clone --recursive https://github.com/johnblaut/happsc.git
 cd happsc
 ln -s env/$APP_ENVIRONMENT/.env
-ln -s env/$APP_ENVIRONMENT/.env/docker-compose.override.yml
+ln -s env/$APP_ENVIRONMENT/docker-compose.override.yml
 cp secrets/sample/.asc.env secrets/sample/.csc.env secrets/sample/.dsc.env $SEC_DIR/
 vim $SEC_DIR/.asc.env
 vim $SEC_DIR/.csc.env
