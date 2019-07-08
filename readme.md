@@ -42,9 +42,68 @@ You should then be able to access the application at: http://localhost:8000 (or 
 
 ## Configuration Reference
 
-#### `<environment>.env`
+#### `.env`
 
-TBD
+##### PHP_TAG
+Test
+
+##### MDB_TAG
+
+
+##### APP_ENVIRONMENT
+
+
+##### APP_VERSION
+
+
+##### APP_HOME
+
+
+##### APP_OTF_DEPLOY
+
+
+##### APP_RESTART
+
+
+##### APP_PORT
+
+
+##### APP_UNAME
+
+
+##### APP_GNAME
+
+
+##### APP_UID
+
+
+##### APP_GID
+
+
+##### APP_LOCAL_DIR
+
+
+##### MYSQL_USER
+
+
+##### MYSQL_DATABASE
+
+
+##### MYSQL_PORT
+
+
+##### MYSQL_HOST
+
+
+##### MYSQL_RESTART
+
+
+##### SEC_DIR
+
+
+### `docker-compose.override.yml`
+
+
 
 #### `.asc.env`
 
