@@ -139,7 +139,7 @@ While at it, this mechanism is also being used for other configurable variables 
 
 ### `.asc.env`
 
-Application service related secrets
+_Application service related secrets_
 
 ##### APPKEY
 This needs to be a random 32 character string in base64 format i.e. `base64:<random_string>` - such a string can be generated via command `echo "base64:$(openssl rand -base64 32)"` e.g. base64:tHQ5PhiAHZKaKMjXYnAbHkQIFtYHVqv8eYyWngwrPJE=
@@ -159,7 +159,7 @@ Currently not used and set to an empty string.
 
 ### `.dsc.env`
 
-Database service related secrets
+_Database service related secrets_
 
 #### MYSQL_ROOT_PASSWORD
 The password for the DB root user.
@@ -167,7 +167,7 @@ The password for the DB root user.
 
 ### `.csc.env`
 
-Common secrets to both services
+_Common secrets to both services_
 
 #### MYSQL_PASSWORD
 The password for the DB user used by the application.
