@@ -30,6 +30,7 @@ On your machine, enter the parent directory where you intend to download this Gi
 #### Notes:
 
 - _Ensure first to read the above Overiew section so that all the commands below are clearer_
+- _Also make sure to go through the Configuration Reference below_
 - _The below commands can also be used as is on Windows if using Git Bash otherwise adapt them accordingly for the standard Windows GUI environment_
 
 ```bash
@@ -66,7 +67,7 @@ This should be set to the desired version of PHP to run. The application contain
 This should be set to the desired version of MariaDB to run. The DB container makes direct use of an official MariaDB image as is. When building the DB container, the value of this variable will be used to fetch the MariaDB image that has a tag equal to this value. Since also the MariaDB images are tagged by version number, the container will therefore run the MariaDB version as defined by this variable. Currently the value being used is `10.2.8`. Update this value accordingly in order to change the MariaB version (making sure the new value is an actual available tag).
 
 ##### APP_ENVIRONMENT
-Set this to the name of the environment e.g. production, test, staging, local.dev1, local.dev2, etc.
+Set this to the name of the environment e.g. production, test, staging, local.dev1, local.dev2, etc. If you are operating on a Windows environment, make sure the value of this variable includes the string `win`. The application makes use of this string to implement some additional settings required for when operating within a Windows environment e.g. local.jb.win
 
 ##### APP_VERSION
 Set this to the application's version number. Currently using value `1.0` for this variable.
@@ -78,44 +79,43 @@ Set this to the root directory within the container under which the application'
 When this variable is defined, immediate on the fly code changes can be made to the code, without having to rebuild the image each time, thus making testing much easier for developers. Normally the code gets stored in the image under `/opt/happs/release`. Doing any changes to the contents of this directory, would each time result in having to rebuild the image in order to pick up such changes, since these files actually form part of the image and thus the image has to be updated accordingly whenever these change. However when this variable is defined, the application is invoked from a different directory that is `/opt/happs/otf`, which is actually mapped to a directory on the Docker host while the container is running. This means that if this mapped directory on the host contains the application files, any changes done to these files directly on the host, will be then be picked up immediatly in the container as well and thus such changes can be tested right away without having to rebuild the image. Of course, when using this feature, one must ensure that in the mapped directory all the neccessary files required for running the application are actually present. That being said, in case this directory is found to be empty and provided the environment is a local one, while all along the `APP_OTF_DEPLOY` variable remains defined, then the application will automatically make a copy of the packaged code in `/opt/happs/release` and place it on `/opt/happs/otf` which corresponds to the mapped host directory. Hence by mounting an empty directory, one can still conveniently test the code not without needing to actually make it available and also the starting contents of this directory will be an exact clone of the files included in the image (in `/opt/happs/release`), thus ensuring that the code being tested is the same as what is intended be used in production since in production it is meant to use the application code stored in the image. In order to make use of this feature, whereby code changes done locally on the host can be immediately visible on the container without needing to rebuild, the only requirement for the `APP_OTF_DEPLOY` variable is that it is set to some value, for example `enabled` would be a suitable value. When this feature is not be used, for example in production environments, then the variable should remain undefined, that is set to an empty string or else one can have it entirely omitted from the configuration.
 
 ##### APP_RESTART
-This determines the restart policy of the containers.
-
+This determines the restart policy of the application service container - `no` is the default restart policy, and it does not restart a container under any circumstance. When `always` is specified, the container always restarts e.g. can be used in environments where downtime needs to be avoided.
 
 ##### APP_PORT
-
+The HTTP port that the Laravel PHP application will listen on. Usuaally this is port 8000, but one can have it changed accordingly. The port number cannot be less than 1024, since the application runs as a regular unprivileged user.
 
 ##### APP_UNAME
-
+The name of the regular unpriveleged user that will run the application e.g. `happps` - root should be avoided and never used.
 
 ##### APP_GNAME
-
+The group of the regular unpriveleged user that will run the application e.g. `happps`
 
 ##### APP_UID
-
+The user id of the regular unpriveleged user that will run the application e.g. `1200`
 
 ##### APP_GID
-
+The group id of the regular unpriveleged user that will run the application e.g. `1200`
 
 ##### APP_LOCAL_DIR
-
+The path to  the local directory on the host that will map to the `/opt/happs/otf` directory on the container, that will allow changes done to the code on the host to be picked up immediately i.e. on the fly in the container. In Linux environments, this would be achieved via a bind mount, so it's important that the permissions of this directory are set correctly, for this to work. The application runs as an unprivileged user with a specific UID:GID as defined by the `APP_UID` and `APP_GID` variables mentioned just above. Hence the permissions of the local directory on the Linux host, in terms of UID and GID, need to be set up in such a way, that the unprivileged application user in the container can read the contents of the mapped host directory. Ideally one would avoid to make the directory world readable, so one could restrict the local host directory with `700` permissions and ensure it is owned by a local user having a matching UID to the one used inside the container, so that it can be read by the application, but not by other users (except root of course). For instance if one is using user `happs` with UID `1200` inside the container, then one can create an identical user on the Linux Docker host and have the mapped directory owned by this user. Strictly speaking, only the UID needs to match - the user name could be different but one might want to have them the same on both ends for consistency. In the case of Windows Docker hosts, the mounting of a mapped local directory is essentially done using a CIFS network share, so Docker on Windows will prompt for your local Windows credentials when the mapped directory is being mounted, in order to authenticate access for it - UID/GIDs are not a direct concern on the Windows host end.
 
 ##### MYSQL_USER
-
+The name of DB user used by the application to access the database e.g. `happs`
 
 ##### MYSQL_DATABASE
-
+The name of the database that the application will connect to e.g. `happs`
 
 ##### MYSQL_PORT
-
+The listening port of the DB instance - usually `3306`
 
 ##### MYSQL_HOST
-
+The database host. When using the included MariaDB container for the database service, this should always remain set to the name of the DB container i.e. `hdsc` which the containers are able to resolve internally. Only change this value in case for some reason you need to connect the application to some other external database.
 
 ##### MYSQL_RESTART
-
+This determines the restart policy of the database service container - works in the same manner as described for `APP_RESTART` but applies to the DB container instead.
 
 ##### SEC_DIR
-
+The path to the local directory on the Docker host where the configuration files storing any required credentials and secrets ( i.e. `.asc.env`, `.csc.env` and `.dsc.env` ) will reside. It is recommended to restrict this directory as much as possible e.g. `700` permissions and have it hidden i.e. name of directory would begin with a `.` - as for the three configuration files which are already hidden these should have restricted permissions as well e.g. `600`
 
 ### `docker-compose.override.yml`
 
