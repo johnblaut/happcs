@@ -72,6 +72,8 @@ then
 	if [[ -z "$(mysql -N -B -h ${MYSQL_HOST} -u ${MYSQL_USER} -p${MYSQL_PASSWORD} -e 'show tables' ${MYSQL_DATABASE})" ]] 
 	then
 		php artisan migrate --seed
+
+		echo
 	else
 		echo -e "\nSkipping table creation and seeding as DB has already been populated ...\n"
 	fi
