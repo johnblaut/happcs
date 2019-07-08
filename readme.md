@@ -35,8 +35,16 @@ On your machine, enter the parent directory where you intend to download this Gi
 ```bash
 git clone --recursive https://github.com/johnblaut/happsc.git
 cd happsc
-# before proceeding with the next command, ensure your 'env/<environment>/' files are already present and fetched from Git - if not and you are currently unable to submit changes to the Git repository, then for now manually create the 'env/<environment>/' directory directly on the host and within this directory add the expected '.env' and 'docker-compose.override.yml' configuration files, and have these updated accordingly for your environment
-# in the next commands replace the #$APP_ENVIRONMENT# and #$SEC_DIR# placeholders with the actual values of the enclosed variables as defined in the corresponding 'env/<environment>/.env' file for your environment
+
+# before proceeding with the next command, ensure your 'env/<environment>/' files are already present 
+# and fetched from Git - if not and you are currently unable to submit changes to the Git repository,
+# then for now manually create the 'env/<environment>/' directory directly on the host and within this
+# directory add the expected '.env' and 'docker-compose.override.yml' configuration files, and have
+# these updated accordingly for your environment
+#
+# in the next commands replace the #$APP_ENVIRONMENT# and #$SEC_DIR# placeholders with the actual values
+# of the enclosed variables as defined in the corresponding 'env/<environment>/.env' file for your environment
+
 ln -s env/#$APP_ENVIRONMENT#/.env
 ln -s env/#$APP_ENVIRONMENT#/docker-compose.override.yml
 cp secrets/sample/.asc.env secrets/sample/.csc.env secrets/sample/.dsc.env #$SEC_DIR#/
