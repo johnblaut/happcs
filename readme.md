@@ -153,7 +153,7 @@ While at it, this mechanism is also being used for other configurable variables 
 _Application service related secrets_
 
 ##### APPKEY
-This is used by the application as an encryption key and needs to be a random 32 character string in base64 format i.e. `base64:<random_string>` - such a string can be generated using the following command: `echo "base64:$(openssl rand -base64 32)"` e.g.  base64:tHQ5PhiAHZKaKMjXYnAbHkQIFtYHVqv8eYyWngwrPJE=
+This is used by the application as an encryption key and needs to be a random 32 character string in base64 format i.e. `base64:<random_string>` - such a string can be generated using the following command: `echo "base64:$(openssl rand -base64 32)"` e.g. `base64:tHQ5PhiAHZKaKMjXYnAbHkQIFtYHVqv8eYyWngwrPJE=`
 
 ##### REDISPW
 Redis credentials. Currently not used and set to null.
