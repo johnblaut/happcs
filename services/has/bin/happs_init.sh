@@ -26,8 +26,10 @@ echo -e "Working directory:  $(pwd)\n"
 # then the on the fly directory can be automatically initially populated with cloned contents from the release directory to avoid having to do this manually on the local docker host
 if [[ ( -n $(echo ${APP_ENVIRONMENT} | grep "local") ) && ( -n "${APP_OTF_DEPLOY_OPT}" ) && ( $(pwd) == "${APP_HOME_DIR}/otf" ) && ( -z "$(ls -A ${APP_HOME_DIR}/otf)" ) && ( -n "$(ls -A ${APP_HOME_DIR}/release)" ) ]]
 then
-	echo "Current working directory is also empty - hence safe to automatically copy application in here so that it is readily available for on the fly updates ...\n"
+	echo -e "Current working directory is also empty - hence safe to automatically copy application in here so that it is readily available for on the fly updates ...\n"
 
+	# if environment uses a Windows host then add the -L option to rsync in order to replace symlinks with actual files
+	# so as to avoid any errors associated with trying to handle symlinks on a Windows host 
 	[[ -n $(echo ${APP_ENVIRONMENT} | grep "win") ]] && RSYNC_OPTS="-a -L --stats" || RSYNC_OPTS="-a --stats"
 
 	rsync $RSYNC_OPTS ${APP_HOME_DIR}/release/ ${APP_HOME_DIR}/otf/
