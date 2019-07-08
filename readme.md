@@ -25,17 +25,24 @@ This repository also conveniently references the [Happs repository](https://bitb
 
 ## Quick Start
 
-On your machine, enter the parent directory where you intend to download this Git repository and execute the following:
+On your machine, enter the parent directory where you intend to download this Git repository and execute the following commands:
+
+#### Notes:
+
+- _Ensure first to read the above Overiew section so that all the commands below are clearer_
+- _Any strings in the steps below starting and ending with a #, are simply just indicative placeholders that are intended for you to replace with the actual values of the enclosed variable names between the # characters, when you are submitting these commands on the shell. The value of these variables should therefore match with what has been set in the `env/<environment>/.env` configuration file. These are not predefined environment variables on the host that will be interpreted automatically by the shell, unless you wish to actually declare and export these yourself in advance. That should work as well if you wish to do so - of course in that case omit the # characters.
+- _As explained in the overvivew above, configuration is maintained in Git on a per environment basis in `env/<environment>/` directories. Hence the below steps assume that such configuration is already present in Git and will be fetched when cloning the Git repository. If however at this time you are not able to submit and commit changes to the Git repository, in that exceptional case, after you enter the cloned `happsc` directory and before you run the first `ln` symlink command, create your own `env/<environment>/` directory directly on the host and within it add the expected `.env` and `docker-compose.override.yml` configuration files, updated accordingly for your environment.
+- _The below commands can also be used as is on Windows if using Git Bash_
 
 ```bash
 git clone --recursive https://github.com/johnblaut/happsc.git
 cd happsc
-ln -s env/$APP_ENVIRONMENT/.env
-ln -s env/$APP_ENVIRONMENT/docker-compose.override.yml
-cp secrets/sample/.asc.env secrets/sample/.csc.env secrets/sample/.dsc.env $SEC_DIR/
-vim $SEC_DIR/.asc.env
-vim $SEC_DIR/.csc.env
-vim $SEC_DIR/.dsc.env
+ln -s env/#$APP_ENVIRONMENT#/.env
+ln -s env/#$APP_ENVIRONMENT#/docker-compose.override.yml
+cp secrets/sample/.asc.env secrets/sample/.csc.env secrets/sample/.dsc.env #$SEC_DIR#/
+vim #$SEC_DIR#/.asc.env
+vim #$SEC_DIR#/.csc.env
+vim #$SEC_DIR#/.dsc.env
 docker-compose up
 ```
 You should then be able to access the application at: http://localhost:8000 (or an alternative port if your configuration specifies otherwise)
