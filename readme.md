@@ -30,13 +30,13 @@ On your machine, enter the parent directory where you intend to download this Gi
 #### Notes:
 
 - _Ensure first to read the above Overiew section so that all the commands below are clearer_
-- _Any strings in the steps below starting and ending with a #, are simply just indicative placeholders that are intended for you to replace with the actual values of the enclosed variable names between the # characters, when you are submitting these commands on the shell. The value of these variables should therefore match with what has been set in the corresponding `env/<environment>/.env` configuration file for your given environment. These are not predefined environment variables on the host that will be interpreted automatically by the shell, unless you wish to actually declare and export these yourself in advance. That should work as well if you wish to do so - of course in that case omit the # characters._
-- _As explained in the overvivew above, configuration is maintained in Git on a per environment basis in `env/<environment>/` directories. Hence the below steps assume that such configuration is already present in Git and will be fetched when cloning the Git repository. If however at this time you are not able to submit and commit changes to the Git repository, in that exceptional case, after you enter the cloned `happsc` directory and before you run the first `ln` symlink command, create your own `env/<environment>/` directory directly on the host and within it add the expected `.env` and `docker-compose.override.yml` configuration files, updated accordingly for your environment. Then proceed to execute the remaining commands._
-- _The below commands can also be used as is on Windows if using Git Bash_
+- _The below commands can also be used as is on Windows if using Git Bash otherwise adapt them accordingly for the standard Windows GUI environment_
 
 ```bash
 git clone --recursive https://github.com/johnblaut/happsc.git
 cd happsc
+# before proceeding with the next command, ensure your 'env/<environment>/' files are already present and fetched from Git - if not and you are currently unable to submit changes to the Git repository, then for now manually create the 'env/<environment>/' directory directly on the host and within this directory add the expected '.env' and 'docker-compose.override.yml' configuration files, and have these updated accordingly for your environment
+# in the next commands replace the #$APP_ENVIRONMENT# and #$SEC_DIR# placeholders with the actual values of the enclosed variables as defined in the corresponding 'env/<environment>/.env' file for your environment
 ln -s env/#$APP_ENVIRONMENT#/.env
 ln -s env/#$APP_ENVIRONMENT#/docker-compose.override.yml
 cp secrets/sample/.asc.env secrets/sample/.csc.env secrets/sample/.dsc.env #$SEC_DIR#/
