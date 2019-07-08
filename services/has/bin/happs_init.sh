@@ -28,7 +28,9 @@ if [[ ( -n $(echo ${APP_ENVIRONMENT} | grep "local") ) && ( -n "${APP_OTF_DEPLOY
 then
 	echo "Current working directory is also empty - hence safe to automatically copy application in here so that it is readily available for on the fly updates ...\n"
 
-	rsync -a --stats ${APP_HOME_DIR}/release/ ${APP_HOME_DIR}/otf/
+	[[ -n $(echo ${APP_ENVIRONMENT} | grep "win") ]] && RSYNC_OPTS="-a -L --stats" || RSYNC_OPTS="-a --stats"
+
+	rsync $RSYNC_OPTS ${APP_HOME_DIR}/release/ ${APP_HOME_DIR}/otf/
 fi
 
 echo "File listing:"
