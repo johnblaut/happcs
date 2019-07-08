@@ -42,27 +42,28 @@ You should then be able to access the application at: http://localhost:8000 (or 
 
 ## Configuration Reference
 
-#### `.env`
+### `.env`
 
 ##### PHP_TAG
-Test
+This should be set to the desired version of PHP to run. The application container makes use of an official PHP image (CLI only in this case) as its base. When building the application container, the value of this variable will be used to fetch the PHP image that has a tag equal to this value. Since the PHP images are tagged by version number, the container will therefore run the PHP version as defined by this variable. Currently the value being used is `7.1` meaning that the container be using the latest PHP 7.1 image as its base. Update this value accordingly in order to change the PHP version (make sure the new value is an actual available tag).
 
 ##### MDB_TAG
-
+This should be set to the desired version of MariaDB to run. The DB container makes direct use of an official MariaDB image as is. When building the DB container, the value of this variable will be used to fetch the MariaDB image that has a tag equal to this value. Since also the MariaDB images are tagged by version number, the container will therefore run the MariaDB version as defined by this variable. Currently the value being used is `10.2.8`. Update this value accordingly in order to change the MariaB version (making sure the new value is an actual available tag).
 
 ##### APP_ENVIRONMENT
-
+Set this to the name of the environment e.g. production, test, staging, local.dev1, local.dev2, etc.
 
 ##### APP_VERSION
-
+Set this to the application's version number. Currently using value `1.0` for this variable.
 
 ##### APP_HOME
-
+Set this to the root directory within the container under which the application's whole directory structure will reside including the application code. Current set to `/opt/happs`
 
 ##### APP_OTF_DEPLOY
-
+When this variable is defined, immediate on the fly code changes can be made to the code, without having to rebuild the image each time, thus making testing much easier for developers. Normally the code gets stored in the image under `/opt/happs/release`. Doing any changes to the contents of this directory, would each time result in having to rebuild the image in order to pick up such changes, since these files actually form part of the image and thus the image has to be updated accordingly whenever these change. However when this variable is defined, the application is invoked from a different directory that is `/opt/happs/otf`, which is actually mapped to a directory on the Docker host while the container is running. This means that if this mapped directory on the host contains the application files, any changes done to these files directly on the host, will be then be picked up immediatly in the container as well and thus such changes can be tested right away without having to rebuild the image. Of course, when using this feature, one must ensure that in the mapped directory all the neccessary files required for running the application are actually present. That being said, in case this directory is found to be empty and provided the environment is a local one, while all along the `APP_OTF_DEPLOY` variable remains defined, then the application will automatically make a copy of the packaged code in `/opt/happs/release` and place it on `/opt/happs/otf` which corresponds to the mapped host directory. Hence by mounting an empty directory, one can still conveniently test the code not without needing to actually make it available and also the starting contents of this directory will be an exact clone of the files included in the image (in `/opt/happs/release`), thus ensuring that the code being tested is the same as what is intended be used in production since in production it is meant to use the application code stored in the image. In order to make use of this feature, whereby code changes done locally on the host can be immediately visible on the container without needing to rebuild, the only requirement for the `APP_OTF_DEPLOY` variable is that it is set to some value, for example `enabled` would be a suitable value. When this feature is not be used, for example in production environments, then the variable should remain undefined, that is set to an empty string or else one can have it entirely omitted from the configuration.
 
 ##### APP_RESTART
+This determines the restart policy of the containers.
 
 
 ##### APP_PORT
@@ -105,14 +106,14 @@ Test
 
 
 
-#### `.asc.env`
+### `.asc.env`
 
 TBD
 
-#### `.csc.env`
+### `.csc.env`
 
 TBD
 
-#### `.dsc.env`
+### `.dsc.env`
 
 TBD
