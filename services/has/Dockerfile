@@ -38,7 +38,8 @@ WORKDIR $apphome/release
 # preferred to avoid root when running it
 USER $appuname
 
-RUN composer update
+RUN composer update && \
+    composer clearcache
 
 # copy the entrypoint script at the end to avoid rebuilding
 # most of the image layers again whenever this script needs 

@@ -79,7 +79,7 @@ This should be set to the desired version of MariaDB to run. The DB container ma
 Set this to the name of the environment e.g. `production`, `test`, `staging`, `local.dev1`, `local.dev2`, etc. If you are operating on a Windows environment, make sure the value of this variable includes the string `win` e.g. `local.jb.win`. The application makes use of this string to implement additional measures required for when operating within a Windows environment such as, when copying files to a mapped directory mounted from a Windows host, there could be issues when encountering symlinks, so by checking for this string the application in such cases will convert the symlinks to actual files during the copying process in order to avoid issues of this sort. Refer to the below documentation for `APP_OTF_DEPLOY` for more information regarding the purpose of this copy operation to a mapped directory.
 
 ##### APP_VERSION
-Set this to the application's version number. Currently using value `1.0` for this variable.
+Set this to the application's version number. Currently using value `1.0` for this variable. Together with `APP_ENVIRONMENT`, this variable is also used to form the tag for the application service container image. The format of the tag is: `$APP_VERSION-$APP_ENVIRONMENT`
 
 ##### APP_HOME
 Set this to the root directory within the container under which the application's whole directory structure will reside including the application code. Current set to `/opt/happs`
@@ -126,7 +126,10 @@ This determines the restart policy of the database service container - works in 
 ##### SEC_DIR
 The path to the local directory on the Docker host where the configuration files storing any required credentials and secrets ( i.e. `.asc.env`, `.csc.env` and `.dsc.env` ) will reside. It is recommended to restrict this directory as much as possible e.g. `700` permissions and have it hidden i.e. name of directory would begin with a `.` - as for the three configuration files which are already hidden these should have restricted permissions as well e.g. `600`
 
+
 ### `docker-compose.override.yml`
+
+In this setup, this configuration file is available on a per environment basis and for each environment it can be found under `env/<environment>/`. By convention, Docker Compose reads the  `docker-compose.yml` file for the base configuration of application while, if available, the `docker-compose.override.yml` is read for any specific configuration overrides that may need to be applied - so in the case of this setup, these overrides would be specific for the given environment being deployed. In most cases this `docker-compose.override.yml` file is practically empty ( e.g. see `env/production/docker-compose.override.yml` ) as the base `docker-compose.yml` configuration alone is sufficient. A specific case where overrides are required is when one wants to be able to apply on the fly changes to the code on a local environment, which as mentioned before is enabled via the `APP_OTF_DEPLOY` variable and involves mounting a local host directory as a mapped directory on the container. For this mount to take place, a `volumes` entry needs to be present in the Docker Compose configuration. Therefore for environments where this feature may want to be used, such as on local environments, the `docker-compose.override.yml` will contain the extra configuration needed for mounting the mapped host directory ( see `env/local.jb/docker-compose.override.yml` and `env/local.jb.win/docker-compose.override.yml` ), in addition to the base configuration provided in `docker-compose.yml`. For other environments, such as production, this feature is not planned to be used, as in such environments the intention is to use the code already packaged in the image - thus the `docker-compose.override.yml` file for these environments is left virtually empty, so that no additional configuration other than the base configuration gets applied.
 
 
 ## Secrets Management
@@ -138,27 +141,25 @@ Worth noting is that the [Laravel documentation](https://laravel.com/docs/5.8/co
 While at it, this mechanism is also being used for other configurable variables in the application `.env` file besides secrets. For such settings the initial placeholder value is `_INHERIT_`, and while in the case of the secrets the actual values were being taken from the `.asc.env`, `.csc.env` and `.dsc.env` files, in these case of these other settings, the actual values are being taken from the enviroment's `.env` file found in Git under `env/<environment>`. In this way, for a given environment, the intended values for all configurable variables are thus managed from a single `.env` file, i.e. the 'outer' `.env` file found under `env/<environment>` which is referenced by Docker Compose ( via the symlinks mentioned in the Quick Start section ) and thus there is no need to do any changes to the application `.env` file, which therefore is packaged inside the container in generic form in terms of `_SECRET_` and `_INHERIT_` placeholders. The application `.env` file would only be edited, when one wants to test configuration changes immediately, which is only possible when on the fly updates are enabled ( i.e. when variable `APP_OTF_DEPLOY` is defined ). For normal operation however, this 'inner' application `.env` file is not expected to be maintained by the user - the only `.env` file managed by the user is the 'outer' one and is maintained in Git under `env/<environment>` in order to permanently and conveniently keep track of all required configuration for all managed environments ( excluding secrets and credentials of course which as explained for security reasons are maintained only locally in files: `.asc.env`, `.csc.env` and `.dsc.env` ).
 
 ### `.asc.env`
-
 _Application service related secrets_
 
 ##### APPKEY
-This needs to be a random 32 character string in base64 format i.e. `base64:<random_string>` - such a string can be generated via command `echo "base64:$(openssl rand -base64 32)"` e.g. base64:tHQ5PhiAHZKaKMjXYnAbHkQIFtYHVqv8eYyWngwrPJE=
+This is used by the application as an encryption key and needs to be a random 32 character string in base64 format i.e. `base64:<random_string>` - such a string can be generated via command `echo "base64:$(openssl rand -base64 32)"` e.g. base64:tHQ5PhiAHZKaKMjXYnAbHkQIFtYHVqv8eYyWngwrPJE=
 
 ##### REDISPW
-Currently not used and set to null.
+Redis credentials. Currently not used and set to null.
 
 ##### MAILPW
-Currently not used and set to null.
+This is the SMTP password in case the SMTP service being used requires authentication. Currently not used and set to null.
 
 ##### PUSHKEY
-Currently not used and set to an empty string.
+Key credentials for the Pusher broadcast service. Currently not used and set to an empty string.
 
 ##### PUSHSEC
-Currently not used and set to an empty string.
+Secret credentials for the Pusher broadcast service. Currently not used and set to an empty string.
 
 
 ### `.dsc.env`
-
 _Database service related secrets_
 
 #### MYSQL_ROOT_PASSWORD
@@ -166,7 +167,6 @@ The password for the DB root user.
 
 
 ### `.csc.env`
-
 _Common secrets to both services_
 
 #### MYSQL_PASSWORD
