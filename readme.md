@@ -133,7 +133,7 @@ The path to the local directory on the Docker host where the configuration files
 
 As mentioned before, secrets and other sensitive credentials are mantainined in three files ( i.e. `.asc.env`, `.csc.env` and `.dsc.env` ) residing in the directory as defined by the `SEC_DIR` configuration variable. These secrets need to be referenced by the Laravel application and normally it would expect to find them in a `.env file` in its own application directory ( not to be confused with the other .env configuration file found in `env/<environment>` which is referenced by Docker Compose after applying the symlinks mentioned in the Quick Start section ). For security purposes, the original application .env file that is copied to the container image ( found in Git at `services/has/conf/.env` ), is a generic one populated with a placeholder `_SECRET_` string for any secrets / credentials related variables. This way one ensures that no sensitive details get included in the image. The actual secrets' values only get written to this `.env` file during run time thanks to the entrypoint script ( found in Git at `services/has/bin/happs_init.sh` ) invoked on container startup, which will replace the `_SECRET_` placeholder strings with the actual variables defined in the local secrets files ( i.e. `.asc.env`, `.csc.env` and `.dsc.env` ). 
 
-Worth noting is that the [Laravel documentation](https://laravel.com/docs/5.8/configuration) mentions that shll environment variables of the same name will override similar variables found in the application's `.env` file. At the same time though the same documentation mentions that all of the variables listed in the `.env` file will be loaded when the application receives a request, which means that one can update these variables by either updating them in the `.env` file or else by overriding them with a new value in the shell environment. Both methods would require the user to perform operations from within the container, however updating the `.env` file can be done in a much easier manner, when 'on the fly' updates are enabled ( i.e. when variable `APP_OTF_DEPLOY` is defined ) as the user can then edit the file directly from the Docker host without needing to operate from within the container, since the application files, including this `.env` file are actually in a mapped directory mounted from the Docker host. For this reason it was preferred to have the variables read from the application `.env` file rather than from the shell, as the `.env` file can be accessed more easily when 'on the fly' updates are enabled. This meant that the initial variables used to define these secret values had to be given a different name then the actual variable names found in the application `.env` file, since if they shared the same name, the initial variables read from the shell would override the ones in the file, meaning that any future updates for these values done during runtime through the file would never take any effect, as the initial shall variables would retain priority ( e.g. with reference to the `services/has/bin/happs_init.sh` entry point script, one can see that the variable APP_KEY found in the file takes its value from  shell variable APPKEY not APP_KEY - the same can be said for DB_PASSWORD which takes its value from MYSQL_PASSWORD rather than DB_PASSWORD - this way when say APP_KEY is updated in the file, that update can be picked up the application, since there is no overriding APP_KEY variable on the shell, as the shell variable being used to set the file variable is a different one i.e. it is APPKEY rather than APP_KEY ).
+Worth noting is that the [Laravel documentation](https://laravel.com/docs/5.8/configuration) mentions that shell environment variables of the same name will override similar variables found in the application's `.env` file. At the same time though the same documentation mentions that all of the variables listed in the `.env` file will be loaded when the application receives a request, which means that one can update these variables by either updating them in the `.env` file or else by overriding them with a new value in the shell environment. Both methods would require the user to perform operations from within the container, however updating the `.env` file can be done in a much easier manner, when 'on the fly' updates are enabled ( i.e. when variable `APP_OTF_DEPLOY` is defined ) as the user can then edit the file directly from the Docker host without needing to operate from within the container, since the application files, including this `.env` file are actually in a mapped directory mounted from the Docker host. For this reason it was preferred to have the variables read from the application `.env` file rather than from the shell, as the `.env` file can be accessed more easily when 'on the fly' updates are enabled. This meant that the initial variables used to define these secret values had to be given a different name then the actual variable names found in the application `.env` file, since if they shared the same name, the initial variables read from the shell would override the ones in the file, meaning that any future updates for these values done during runtime through the file would never take any effect, as the initial shall variables would retain priority ( e.g. with reference to the `services/has/bin/happs_init.sh` entry point script, one can see that the variable APP_KEY found in the file takes its value from  shell variable APPKEY not APP_KEY - the same can be said for DB_PASSWORD which takes its value from MYSQL_PASSWORD rather than DB_PASSWORD - this way when say APP_KEY is updated in the file, that update can be picked up the application, since there is no overriding APP_KEY variable on the shell, as the shell variable being used to set the file variable is a different one i.e. it is APPKEY rather than APP_KEY ).
 
 While at it, this mechanism is also being used for other configurable variables in the application `.env` file besides secrets. For such settings the initial placeholder value is `_INHERIT_`, and while in the case of the secrets the actual values were being taken from the `.asc.env`, `.csc.env` and `.dsc.env` files, in these case of these other settings, the actual values are being taken from the enviroment's `.env` file found in Git under `env/<environment>`. In this way, for a given environment, the intended values for all configurable variables are thus managed from a single `.env` file, i.e. the 'outer' `.env` file found under `env/<environment>` which is referenced by Docker Compose ( via the symlinks mentioned in the Quick Start section ) and thus there is no need to do any changes to the application `.env` file, which therefore is packaged inside the container in generic form in terms of `_SECRET_` and `_INHERIT_` placeholders. The application `.env` file would only be edited, when one wants to test configuration changes immediately, which is only possible when on the fly updates are enabled ( i.e. when variable `APP_OTF_DEPLOY` is defined ). For normal operation however, this 'inner' application `.env` file is not expected to be maintained by the user - the only `.env` file managed by the user is the 'outer' one and is maintained in Git under `env/<environment>` in order to permanently and conveniently keep track of all required configuration for all managed environments ( excluding secrets and credentials of course which as explained for security reasons are maintained only locally in files: `.asc.env`, `.csc.env` and `.dsc.env` ).
 
@@ -141,10 +141,34 @@ While at it, this mechanism is also being used for other configurable variables 
 
 Application service related secrets
 
+##### APPKEY
+This needs to be a random 32 character string in base64 format i.e. `base64:<random_string>` - such a string can be generated via command `echo "base64:$(openssl rand -base64 32)"` e.g. base64:tHQ5PhiAHZKaKMjXYnAbHkQIFtYHVqv8eYyWngwrPJE=
+
+##### REDISPW
+Currently not used and set to null.
+
+##### MAILPW
+Currently not used and set to null.
+
+##### PUSHKEY
+Currently not used and set to an empty string.
+
+##### PUSHSEC
+Currently not used and set to an empty string.
+
+
 ### `.dsc.env`
 
 Database service related secrets
 
+#### MYSQL_ROOT_PASSWORD
+The password for the DB root user.
+
+
 ### `.csc.env`
 
 Common secrets to both services
+
+#### MYSQL_PASSWORD
+The password for the DB user used by the application.
+
