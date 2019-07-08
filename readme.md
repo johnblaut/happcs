@@ -25,6 +25,13 @@ This repository also conveniently references the [Happs repository](https://bitb
 
 As for the DB service container, a named volume `hdsv` is being used for mounting the data directory on the container at `/var/lib/mysql`. This way the data can persist, regardless of whether the container is running or not.
 
+
+## Requirements
+
+- Git
+- Docker
+
+
 ## Run Instructions
 
 On your machine, enter the parent directory where you intend to download this Git repository and execute the following commands:
@@ -65,6 +72,7 @@ vim #$SEC_DIR#/.dsc.env
 docker-compose up
 ```
 You should then be able to access the application at: http://localhost:8000 (or an alternative port if your configuration specifies otherwise)
+
 
 ## Configuration Reference
 
