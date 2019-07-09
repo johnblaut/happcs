@@ -33,6 +33,8 @@ then
 	[[ -n $(echo ${APP_ENVIRONMENT} | grep "win") ]] && RSYNC_OPTS="-a -L --stats" || RSYNC_OPTS="-a --stats"
 
 	rsync $RSYNC_OPTS ${APP_HOME_DIR}/release/ ${APP_HOME_DIR}/otf/
+
+	echo
 fi
 
 echo "File listing:"
@@ -54,7 +56,9 @@ then
 		sed -i -re "s#APP_KEY=.*#APP_KEY=${APPKEY}#g;s/DB_PASSWORD=.*/DB_PASSWORD=${MYSQL_PASSWORD}/g;s/REDIS_PASSWORD=.*/REDIS_PASSWORD=${REDISPW}/g" .env
 		sed -i -re "s/MAIL_PASSWORD=.*/MAIL_PASSWORD=${MAILPW}/g;s/PUSHER_APP_KEY=.*/PUSHER_APP_KEY=${PUSHKEY}/g;s/PUSHER_APP_SECRET=.*/PUSHER_APP_SECRET=${PUSHSEC}/g" .env
     	fi
-	
+
+
+	# check if DB port is accessible before proceeding with launching the application
 	DBCHECK=2
 
 	echo -e "Wating for DB at $MYSQL_HOST:$MYSQL_PORT to come up ...\n"
