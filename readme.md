@@ -28,6 +28,7 @@ As for the DB service container, a named volume `hdsv` is being used for mountin
 
 ## Requirements
 
+- Linux / Mac / Windows
 - Git
 - Docker
 
